@@ -36,6 +36,13 @@ jobs:
           destination: err.png
           full-page: false
           
+      - name: Get Time
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 2
+          format: 'YYYY-MM-DD-HH-mm-ss'
+
           
       - name: download err screenshot from artifact
         uses: actions/download-artifact@v2
@@ -48,12 +55,14 @@ jobs:
         
       - name: Commit to pictures
         if: endsWith(github.ref, 'main') == true
+        env:
+          TIME: "${{ steps.time.outputs.time }}"
         run: |
           git config --global user.email "err-screenshot-bot@example.com"
           git config --global user.name "Err screenshot bot"
           
           mkdir -p pictures
-          mv err.png/err.png ""$(date +"%d-%m-%Y")".png"
+          mv err.png/err.png "pictures/err-$(date +"%d-%m-%Y").png"
           git add pictures/*
           git commit -m 'add current screenshot to pictures'
           git push
