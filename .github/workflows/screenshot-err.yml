@@ -13,6 +13,9 @@ on:
     branches: [ main ]
     paths: 
       - '.github/workflows/screenshot-err.yml'
+      
+  schedule: 
+    - cron: '*/60 * * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -62,7 +65,7 @@ jobs:
           git config --global user.name "Err screenshot bot"
           
           mkdir -p pictures
-          mv err.png/err.png "pictures/err-$(date +"%d-%m-%Y").png"
+          mv err.png/err.png "pictures/err-${TIME}.png"
           git add pictures/*
           git commit -m 'add current screenshot to pictures'
           git push
